@@ -1,0 +1,19 @@
+.doors {
+	justify-content: center;
+}
+
+.door {
+	align-items: center;
+	padding: 10px;
+	cursor: pointer;
+}
+
+.door-unused {
+	align-items: center;
+	padding: 10px;
+	cursor: not-allowed;
+}
+
+.door-img {
+	width: 120px;
+}
