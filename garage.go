@@ -11,14 +11,16 @@ import (
 type Sonic struct {
 	TrigGpio string
 	EchoGpio string
-	Dist     int
-	Min      int
-	Max      int
+	Dist     int32
+	Min      int32
+	Max      int32
+	lastDist int32
 	targetSonicStruct
 }
 
 type Door struct {
 	Name      string
+	Index     int
 	Clicked   bool
 	RelayGpio string
 	Sonic
@@ -40,9 +42,9 @@ type MsgClick struct {
 type MsgPosition struct {
 	Path string
 	Door int
-	Dist int
-	Min  int
-	Max  int
+	Dist int32
+	Min  int32
+	Max  int32
 }
 
 var targets = []string{"demo", "rpi", "nano-rp2040", "wioterminal"}
@@ -51,6 +53,10 @@ func New(id, model, name string) dean.Thinger {
 	println("NEW GARAGE")
 	g := &Garage{}
 	g.Device = device.New(id, model, name, targets).(*device.Device)
+	for i := range g.Doors {
+		door := &g.Doors[i]
+		door.Index = i
+	}
 	g.targetNew()
 	return g
 }
@@ -123,4 +129,31 @@ func (g *Garage) parseParams() {
 func (g *Garage) Run(i *dean.Injector) {
 	g.parseParams()
 	g.run(i)
+}
+
+func (d *Door) sendPosition(inj *dean.Injector, dist int32) {
+
+	if dist == d.lastDist {
+		return
+	}
+
+	d.Dist = dist
+	d.lastDist = dist
+
+	if dist > d.Max {
+		d.Max = dist
+	}
+	if dist < d.Min {
+		d.Min = dist
+	}
+
+	var msg dean.Msg
+	var pos = MsgPosition{
+		Path: "position",
+		Door: d.Index,
+		Dist: d.Dist,
+		Max:  d.Max,
+		Min:  d.Min,
+	}
+	inj.Inject(msg.Marshal(pos))
 }
