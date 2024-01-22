@@ -1,5 +1,7 @@
 .doors {
 	justify-content: center;
+	align-items: center;
+	min-height: 210px;
 }
 
 .door {
