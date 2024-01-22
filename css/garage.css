@@ -8,12 +8,8 @@
 	cursor: pointer;
 }
 
-.door-unused {
-	align-items: center;
-	padding: 10px;
-	cursor: not-allowed;
-}
-
 .door-img {
 	width: 120px;
+	margin-bottom: 10px;
+
 }

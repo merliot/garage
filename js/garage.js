@@ -23,17 +23,17 @@ class Garage extends WebSocketController {
 	}
 
 	showGarage() {
+		let nodef = document.getElementById("nodef")
+		nodef.classList.replace("hidden", "visible")
 		for (let i = 0; i < 2; i++) {
 			let div = document.getElementById("door" + i)
 			let label = document.getElementById("door" + i + "-name")
 			var door = this.state.Doors[i]
 			if (door.Name === "") {
-				div.classList.replace("door", "door-unused")
-				label.classList.replace("door-name", "door-name-unused")
-				label.textContent = "unasigned"
+				div.classList.replace("visibleFlex", "hidden")
 			} else {
-				div.classList.replace("door-unused", "door")
-				label.classList.replace("door-name-unused", "door-name")
+				nodef.classList.replace("visible", "hidden")
+				div.classList.replace("hidden", "visibleFlex")
 				label.textContent = door.Name
 				div.onmousedown = () => {
 					this.click(i, true)
@@ -49,8 +49,6 @@ class Garage extends WebSocketController {
 	setDoorImg(index) {
 		let image = document.getElementById("door" + index + "-img")
 		let door = this.state.Doors[index]
-
-		image.disabled = false
 
 		let range = door.Max - door.Min
 		let percent = 0
