@@ -23,8 +23,11 @@ class Garage extends WebSocketController {
 	}
 
 	showGarage() {
+
 		let nodef = document.getElementById("nodef")
-		nodef.classList.replace("hidden", "visible")
+		nodef.classList.replace("visible", "hidden")
+
+		var undef = true
 		for (let i = 0; i < 2; i++) {
 			let div = document.getElementById("door" + i)
 			let label = document.getElementById("door" + i + "-name")
@@ -32,17 +35,21 @@ class Garage extends WebSocketController {
 			if (door.Name === "") {
 				div.classList.replace("visibleFlex", "hidden")
 			} else {
-				nodef.classList.replace("visible", "hidden")
-				div.classList.replace("hidden", "visibleFlex")
 				label.textContent = door.Name
+				div.classList.replace("hidden", "visibleFlex")
 				div.onmousedown = () => {
 					this.click(i, true)
 				}
 				div.onmouseup = () => {
 					this.click(i, false)
 				}
+				undef = false
 			}
 			this.setDoorImg(i)
+		}
+
+		if (undef) {
+			nodef.classList.replace("hidden", "visible")
 		}
 	}
 
