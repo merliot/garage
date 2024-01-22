@@ -40,14 +40,14 @@ func (g *Garage) run(inj *dean.Injector) {
 		door := &g.Doors[i]
 		// Configure relay
 		door.relayPin = machine.NoPin
-		if pin, ok := g.pins()[door.RelayGpio]; ok {
+		if pin, ok := g.Pins()[door.RelayGpio]; ok {
 			door.relayPin = machine.Pin(pin)
 			door.relayPin.Configure(machine.PinConfig{Mode: machine.PinOutput})
 		}
 		// Configure HC-SR04 ultrasonic distance sensor
-		if pin, ok := g.pins()[door.TrigGpio]; ok {
+		if pin, ok := g.Pins()[door.TrigGpio]; ok {
 			trigPin := machine.Pin(pin)
-			if pin, ok := g.pins()[door.EchoGpio]; ok {
+			if pin, ok := g.Pins()[door.EchoGpio]; ok {
 				echoPin := machine.Pin(pin)
 				door.hasHcsr04 = true
 				door.hcsr04 = hcsr04.New(trigPin, echoPin)

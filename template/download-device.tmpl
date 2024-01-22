@@ -1,0 +1,27 @@
+<hr>
+<div class="divFlexRow">
+	<div class="divFlexCol">
+		<span>Door Name</span>
+		<input class="doorName" type="text" placeholder="Door #1" name="door1" maxlength=10>
+		<input class="doorName" type="text" placeholder="Door #2" name="door2" maxlength=10>
+	</div>
+	<div class="divFlexCol">
+		<span>Relay</span>
+		<select class="gpio" name="relay1"></select>
+		<select class="gpio" name="relay2"></select>
+	</div>
+	<div class="divFlexCol">
+		<span>Trigger</span>
+		<select class="gpio" name="trig1"></select>
+		<select class="gpio" name="trig2"></select>
+	</div>
+	<div class="divFlexCol">
+		<span>Echo</span>
+		<select class="gpio" name="echo1"></select>
+		<select class="gpio" name="echo2"></select>
+	</div>
+</div>
+
+<script src="js/deployTargetGpios.js"></script>
+<script src="js/download-gpio.js"></script>
+<script src="js/download-device.js"></script>

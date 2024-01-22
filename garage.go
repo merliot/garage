@@ -155,5 +155,6 @@ func (d *Door) sendPosition(inj *dean.Injector, dist int32) {
 		Max:  d.Max,
 		Min:  d.Min,
 	}
+
 	inj.Inject(msg.Marshal(pos))
 }
