@@ -4,6 +4,10 @@ export function run(prefix, url) {
 	const garage = new Garage(prefix, url)
 }
 
+export function runtile(prefix, url) {
+	const garage = new Garage(prefix, url)
+}
+
 class Garage extends WebSocketController {
 
 	open() {

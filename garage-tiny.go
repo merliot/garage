@@ -8,11 +8,14 @@ import (
 
 	"github.com/merliot/dean"
 	"tinygo.org/x/drivers/hcsr04"
+	"tinygo.org/x/drivers/vl53l1x"
 )
 
 type targetSonicStruct struct {
-	hcsr04    hcsr04.Device
-	hasHcsr04 bool
+	hcsr04     hcsr04.Device
+	vl53l1x    vl53l1x.Device
+	hasHcsr04  bool
+	hasVl53l1x bool
 }
 
 type targetDoorStruct struct {
@@ -54,14 +57,38 @@ func (g *Garage) run(inj *dean.Injector) {
 				door.hcsr04.Configure()
 			}
 		}
+		// Configure VL53L1x time-of-flight distance sensor
+		if i == 0 {
+			machine.I2C0.Configure(machine.I2CConfig{
+				Frequency: 400000,
+			})
+			door.vl53l1x = vl53l1x.New(machine.I2C0)
+		} else {
+			machine.I2C1.Configure(machine.I2CConfig{
+				Frequency: 400000,
+			})
+			door.vl53l1x = vl53l1x.New(machine.I2C1)
+		}
+		door.hasVl53l1x = door.vl53l1x.Connected()
+		if door.hasVl53l1x {
+			door.hasHcsr04 = false
+			door.vl53l1x.Configure(true)
+			door.vl53l1x.SetMeasurementTimingBudget(50000)
+			door.vl53l1x.StartContinuous(50)
+		}
 	}
 
-	// Service HC-SR04 sensors
+	// Service sensors
 	for {
 		for i := range g.Doors {
 			door := &g.Doors[i]
-			if door.hasHcsr04 {
+			switch {
+			case door.hasHcsr04:
 				dist := door.hcsr04.ReadDistance() // mm
+				door.sendPosition(inj, dist)
+			case door.hasVl53l1x:
+				door.vl53l1x.Read(true)
+				dist := door.vl53l1x.Distance() // mm
 				door.sendPosition(inj, dist)
 			}
 			time.Sleep(500 * time.Millisecond)
