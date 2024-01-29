@@ -8,7 +8,7 @@ import (
 	"github.com/merliot/dean"
 )
 
-type targetSonicStruct struct {
+type targetSensorStruct struct {
 }
 
 type targetDoorStruct struct {
@@ -59,19 +59,12 @@ func (d *Door) run(inj *dean.Injector) {
 	}
 }
 
-func (g *Garage) runDoors(inj *dean.Injector) {
-	for i := range g.Doors {
-		door := &g.Doors[i]
-		door.run(inj)
-	}
-}
-
 func (g *Garage) run(inj *dean.Injector) {
 	ticker := time.NewTicker(time.Second)
 	for {
 		select {
 		case <-ticker.C:
-			g.runDoors(inj)
+			g.Door.run(inj)
 		}
 	}
 }

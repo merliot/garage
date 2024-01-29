@@ -1,47 +1,42 @@
 package garage
 
 import (
+	"math"
 	"net/url"
-	"strconv"
 
 	"github.com/merliot/dean"
 	"github.com/merliot/device"
 )
 
-type Sonic struct {
-	TrigGpio string
-	EchoGpio string
+type Sensor struct {
 	Dist     int32
 	Min      int32
 	Max      int32
 	lastDist int32
-	targetSonicStruct
+	targetSensorStruct
 }
 
 type Door struct {
 	Name      string
-	Index     int
 	Clicked   bool
 	RelayGpio string
-	Sonic
+	Sensor
 	targetDoorStruct
 }
 
 type Garage struct {
 	*device.Device
-	Doors [2]Door
+	Door Door
 	targetStruct
 }
 
 type MsgClick struct {
 	Path    string
-	Door    int
 	Clicked bool
 }
 
 type MsgPosition struct {
 	Path string
-	Door int
 	Dist int32
 	Min  int32
 	Max  int32
@@ -53,10 +48,7 @@ func New(id, model, name string) dean.Thinger {
 	println("NEW GARAGE")
 	g := &Garage{}
 	g.Device = device.New(id, model, name, targets).(*device.Device)
-	for i := range g.Doors {
-		door := &g.Doors[i]
-		door.Index = i
-	}
+	g.Door.Min = math.MaxInt32
 	g.targetNew()
 	return g
 }
@@ -73,21 +65,17 @@ func (g *Garage) getState(msg *dean.Msg) {
 func (g *Garage) click(msg *dean.Msg) {
 	var msgClick MsgClick
 	msg.Unmarshal(&msgClick)
-	door := &g.Doors[msgClick.Door]
-	door.Clicked = msgClick.Clicked
+	g.Door.Clicked = msgClick.Clicked
 	if g.IsMetal() {
 		if msgClick.Clicked {
-			door.relayOn()
+			g.Door.relayOn()
 		}
 	}
 	msg.Broadcast()
 }
 
 func (g *Garage) position(msg *dean.Msg) {
-	var pos MsgPosition
-	msg.Unmarshal(&pos)
-	msg.Unmarshal(&g.Doors[pos.Door])
-	msg.Broadcast()
+	msg.Unmarshal(&g.Door).Broadcast()
 }
 
 func (g *Garage) Subscribers() dean.Subscribers {
@@ -99,14 +87,6 @@ func (g *Garage) Subscribers() dean.Subscribers {
 	}
 }
 
-func (g *Garage) setDoor(num int, name, relay, trig, echo string) {
-	door := &g.Doors[num]
-	door.Name = name
-	door.RelayGpio = relay
-	door.Sonic.TrigGpio = trig
-	door.Sonic.EchoGpio = echo
-}
-
 func firstValue(values url.Values, key string) string {
 	if v, ok := values[key]; ok {
 		return v[0]
@@ -116,14 +96,8 @@ func firstValue(values url.Values, key string) string {
 
 func (g *Garage) parseParams() {
 	values := g.ParseDeployParams()
-	for i := range g.Doors {
-		num := strconv.Itoa(i + 1)
-		name := firstValue(values, "door"+num)
-		relay := firstValue(values, "relay"+num)
-		trig := firstValue(values, "trig"+num)
-		echo := firstValue(values, "echo"+num)
-		g.setDoor(i, name, relay, trig, echo)
-	}
+	g.Door.Name = firstValue(values, "door")
+	g.Door.RelayGpio = firstValue(values, "relay")
 }
 
 func (g *Garage) Run(i *dean.Injector) {
@@ -150,7 +124,6 @@ func (d *Door) sendPosition(inj *dean.Injector, dist int32) {
 	var msg dean.Msg
 	var pos = MsgPosition{
 		Path: "position",
-		Door: d.Index,
 		Dist: d.Dist,
 		Max:  d.Max,
 		Min:  d.Min,

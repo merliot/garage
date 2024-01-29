@@ -1,11 +1,7 @@
-import { WebSocketController } from './common.js'
+import { WebSocketController, ViewMode } from './common.js'
 
-export function run(prefix, url) {
-	const garage = new Garage(prefix, url)
-}
-
-export function runtile(prefix, url) {
-	const garage = new Garage(prefix, url)
+export function run(prefix, url, viewMode) {
+	const garage = new Garage(prefix, url, viewMode)
 }
 
 class Garage extends WebSocketController {
@@ -27,39 +23,29 @@ class Garage extends WebSocketController {
 	}
 
 	showGarage() {
-
 		let nodef = document.getElementById("nodef")
-		nodef.classList.replace("visible", "hidden")
+		let div = document.getElementById("door")
 
-		var undef = true
-		for (let i = 0; i < 2; i++) {
-			let div = document.getElementById("door" + i)
-			let label = document.getElementById("door" + i + "-name")
-			var door = this.state.Doors[i]
-			if (door.Name === "") {
-				div.classList.replace("visibleFlex", "hidden")
-			} else {
-				label.textContent = door.Name
-				div.classList.replace("hidden", "visibleFlex")
-				div.onmousedown = () => {
-					this.click(i, true)
-				}
-				div.onmouseup = () => {
-					this.click(i, false)
-				}
-				undef = false
-			}
-			this.setDoorImg(i)
-		}
-
-		if (undef) {
+		if (this.state.Door.Name === "") {
+			div.classList.replace("visibleFlex", "hidden")
 			nodef.classList.replace("hidden", "visible")
+		} else {
+			this.setDoorName()
+			this.setDoorImg()
+			this.setMouse()
+			nodef.classList.replace("visible", "hidden")
+			div.classList.replace("hidden", "visibleFlex")
 		}
 	}
 
-	setDoorImg(index) {
-		let image = document.getElementById("door" + index + "-img")
-		let door = this.state.Doors[index]
+	setDoorName() {
+		let label = document.getElementById("door-name")
+		label.textContent = this.state.Door.Name
+	}
+
+	setDoorImg() {
+		let image = document.getElementById("door-img")
+		let door = this.state.Door
 
 		let range = door.Max - door.Min
 		let percent = 0
@@ -70,28 +56,39 @@ class Garage extends WebSocketController {
 
 		image.src = "images/door-" + percent + ".png"
 
-		let div = document.getElementById("door" + index)
+		let div = document.getElementById("door")
 		div.style.background = (door.Clicked) ? "cornsilk" : "none"
 	}
 
+	setMouse() {
+		let div = document.getElementById("door")
+		if (this.viewMode === ViewMode.ViewFull) {
+			div.onmousedown = () => {
+				this.click(true)
+			}
+			div.onmouseup = () => {
+				this.click(false)
+			}
+		}
+	}
+
 	saveClick(msg) {
-		let door = this.state.Doors[msg.Door]
-		door.Clicked = msg.Clicked
-		this.setDoorImg(msg.Door)
+		this.state.Door.Clicked = msg.Clicked
+		this.setDoorImg()
 	}
 
 	savePosition(msg) {
-		let door = this.state.Doors[msg.Door]
+		let door = this.state.Door
 		door.Dist = msg.Dist
 		door.Min = msg.Min
 		door.Max = msg.Max
-		this.setDoorImg(msg.Door)
+		this.setDoorImg()
 	}
 
-	click(index, clicked) {
-		var door = this.state.Doors[index]
+	click(clicked) {
+		let door = this.state.Door
 		door.Clicked = clicked
-		this.setDoorImg(index)
-		this.webSocket.send(JSON.stringify({Path: "click", Door: index, Clicked: clicked}))
+		this.setDoorImg()
+		this.webSocket.send(JSON.stringify({Path: "click", Clicked: clicked}))
 	}
 }

@@ -7,11 +7,23 @@
 .door {
 	align-items: center;
 	padding: 10px;
-	cursor: pointer;
 }
 
 .door-img {
+	height: 120px;
 	width: 120px;
 	margin-bottom: 10px;
+}
 
+.doors {
+	min-height: 120px;
+}
+
+.tile .door-img {
+	height: 60px;
+	width: 60px;
+}
+
+.tile #door-name {
+	font-size: x-small;
 }
