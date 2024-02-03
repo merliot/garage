@@ -31,3 +31,12 @@ func (g *Garage) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 		g.API(g.templates, w, req)
 	}
 }
+
+func (g *Garage) Icon() []byte {
+	icon, _ := fs.ReadFile("images/icon.png")
+	return icon
+}
+
+func (g *Garage) DescHtml() []byte {
+	return nil
+}
