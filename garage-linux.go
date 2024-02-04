@@ -11,7 +11,7 @@ import (
 	"github.com/merliot/device"
 )
 
-//go:embed css js images template
+//go:embed css html js images template
 var fs embed.FS
 
 type osStruct struct {
@@ -38,5 +38,10 @@ func (g *Garage) Icon() []byte {
 }
 
 func (g *Garage) DescHtml() []byte {
-	return nil
+	desc, _ := fs.ReadFile("html/desc.html")
+	return desc
+}
+
+func (g *Garage) SupportedTargets() string {
+	return g.Targets.FullNames()
 }
