@@ -8,7 +8,9 @@ class Garage extends WebSocketController {
 
 	open() {
 		super.open()
-		this.showGarage()
+		if (this.state.DeployParams !== "") {
+			this.showGarage()
+		}
 	}
 
 	handle(msg) {
@@ -23,17 +25,14 @@ class Garage extends WebSocketController {
 	}
 
 	showGarage() {
-		let nodef = document.getElementById("nodef")
 		let div = document.getElementById("door")
 
 		if (this.state.Door.Name === "") {
 			div.classList.replace("visibleFlex", "hidden")
-			nodef.classList.replace("hidden", "visible")
 		} else {
 			this.setDoorName()
 			this.setDoorImg()
 			this.setMouse()
-			nodef.classList.replace("visible", "hidden")
 			div.classList.replace("hidden", "visibleFlex")
 		}
 	}
