@@ -59,6 +59,8 @@ github.com/merliot/device v0.0.0-20240205012116-472b24514d09 h1:rdI4P6VTPzlGdusp
 github.com/merliot/device v0.0.0-20240205012116-472b24514d09/go.mod h1:vPrEcw70HyTYj3yM5uzl4ZNDVoPpyIRdl6xM9kpChn0=
 github.com/merliot/device v0.0.0-20240206060217-03df0ed5e2a2 h1:k+N8qjPj81cveAgBnPmt24irCro2BjcUublX2Wwha6U=
 github.com/merliot/device v0.0.0-20240206060217-03df0ed5e2a2/go.mod h1:vPrEcw70HyTYj3yM5uzl4ZNDVoPpyIRdl6xM9kpChn0=
+github.com/merliot/device v0.0.0-20240210074043-1e50b061e357 h1:afkfTCeKXSWQrGXoWXa/d/bg2Bkqx4dLj2xt+iJQnLs=
+github.com/merliot/device v0.0.0-20240210074043-1e50b061e357/go.mod h1:vPrEcw70HyTYj3yM5uzl4ZNDVoPpyIRdl6xM9kpChn0=
 github.com/merliot/relays v0.0.0-20240117234542-b510d4e5c432 h1:N+ylhBruZjTXNZlEIWnGebJCuQBm80nOiS1SKmbptuo=
 github.com/merliot/relays v0.0.0-20240117234542-b510d4e5c432/go.mod h1:6bX9ZjupbNtk5C4Z1txjZ7frW0TT8qGx05Jb4nWm3j0=
 github.com/mgutz/ansi v0.0.0-20170206155736-9520e82c474b/go.mod h1:01TrycV0kFyexm33Z7vhZRXopbI8J3TDReVlkTgMUxE=

@@ -18,11 +18,9 @@ type targetDoorStruct struct {
 }
 
 type targetStruct struct {
-	osStruct
 }
 
 func (g *Garage) targetNew() {
-	g.osNew()
 }
 
 func (d *Door) relayOn() {

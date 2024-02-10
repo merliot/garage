@@ -1,12 +1,16 @@
 package garage
 
 import (
+	"embed"
 	"math"
 	"net/url"
 
 	"github.com/merliot/dean"
 	"github.com/merliot/device"
 )
+
+//go:embed css html js images template
+var fs embed.FS
 
 type Sensor struct {
 	Dist     int32
@@ -47,7 +51,7 @@ var targets = []string{"demo", "nano-rp2040", "wioterminal"}
 func New(id, model, name string) dean.Thinger {
 	println("NEW GARAGE")
 	g := &Garage{}
-	g.Device = device.New(id, model, name, targets).(*device.Device)
+	g.Device = device.New(id, model, name, fs, targets).(*device.Device)
 	g.Door.Min = math.MaxInt32
 	g.targetNew()
 	return g
