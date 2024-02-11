@@ -3,6 +3,7 @@ package garage
 import (
 	"embed"
 	"math"
+	"net/http"
 	"net/url"
 
 	"github.com/merliot/dean"
@@ -89,6 +90,10 @@ func (g *Garage) Subscribers() dean.Subscribers {
 		"click":     g.click,
 		"position":  g.position,
 	}
+}
+
+func (g *Garage) ServeHTTP(w http.ResponseWriter, req *http.Request) {
+	g.API(w, req, g)
 }
 
 func firstValue(values url.Values, key string) string {
