@@ -9,16 +9,16 @@ import (
 )
 
 func (d *Door) relayOn() {
-	d.Relay.High()
+	d.Relay.On()
 	time.Sleep(500 * time.Millisecond)
-	d.Relay.Low()
+	d.Relay.Off()
 }
 
 func (g *Garage) Run(inj *dean.Injector) {
 
 	// Service sensor
 	for {
-		if dist, ok := g.Door.Vl53l1x.Distance(); ok {
+		if dist, ok := g.Door.Sensor.Distance(); ok {
 			g.Door.sendPosition(inj, dist)
 		}
 		time.Sleep(time.Second)
