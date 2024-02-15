@@ -8,31 +8,34 @@ import (
 
 	"github.com/merliot/dean"
 	"github.com/merliot/device"
+	"github.com/merliot/device/relay"
+	"github.com/merliot/device/vl53l1x"
 )
 
 //go:embed css html js images template
 var fs embed.FS
 
 type Sensor struct {
-	Dist     int32
-	Min      int32
-	Max      int32
-	lastDist int32
-	targetSensorStruct
+	vl53l1x.Vl53l1x `json:"-"`
+	Dist            int32
+	Min             int32
+	Max             int32
+	lastDist        int32
 }
 
 type Door struct {
-	Name      string
-	Clicked   bool
-	RelayGpio string
-	Sensor
-	targetDoorStruct
+	Name   string
+	Relay  relay.Relay
+	Sensor Sensor
+	// for demo
+	moving    bool
+	goingDown bool
+	clicked   bool
 }
 
 type Garage struct {
 	*device.Device
 	Door Door
-	targetStruct
 }
 
 type MsgClick struct {
@@ -51,11 +54,10 @@ var targets = []string{"demo", "nano-rp2040", "wioterminal"}
 
 func New(id, model, name string) dean.Thinger {
 	println("NEW GARAGE")
-	g := &Garage{}
-	g.Device = device.New(id, model, name, fs, targets).(*device.Device)
-	g.Door.Min = math.MaxInt32
-	g.targetNew()
-	return g
+	return &Garage{
+		Device: device.New(id, model, name, fs, targets).(*device.Device),
+		Door:   Door{Sensor: Sensor{Min: math.MaxInt32}},
+	}
 }
 
 func (g *Garage) save(msg *dean.Msg) {
@@ -70,7 +72,7 @@ func (g *Garage) getState(msg *dean.Msg) {
 func (g *Garage) click(msg *dean.Msg) {
 	var msgClick MsgClick
 	msg.Unmarshal(&msgClick)
-	g.Door.Clicked = msgClick.Clicked
+	g.Door.Relay.State = msgClick.Clicked
 	if g.IsMetal() {
 		if msgClick.Clicked {
 			g.Door.relayOn()
@@ -106,36 +108,38 @@ func firstValue(values url.Values, key string) string {
 func (g *Garage) parseParams() {
 	values := g.ParseDeployParams()
 	g.Door.Name = firstValue(values, "door")
-	g.Door.RelayGpio = firstValue(values, "relay")
+	g.Door.Relay.Gpio = firstValue(values, "relay")
+	g.Door.Relay.Configure()
+	g.Door.Sensor.Vl53l1x.Configure()
 }
 
-func (g *Garage) Run(i *dean.Injector) {
+func (g *Garage) Setup() {
+	g.Device.Setup()
 	g.parseParams()
-	g.run(i)
 }
 
 func (d *Door) sendPosition(inj *dean.Injector, dist int32) {
 
-	if dist == d.lastDist {
+	if dist == d.Sensor.lastDist {
 		return
 	}
 
-	d.Dist = dist
-	d.lastDist = dist
+	d.Sensor.Dist = dist
+	d.Sensor.lastDist = dist
 
-	if dist > d.Max {
-		d.Max = dist
+	if dist > d.Sensor.Max {
+		d.Sensor.Max = dist
 	}
-	if dist < d.Min {
-		d.Min = dist
+	if dist < d.Sensor.Min {
+		d.Sensor.Min = dist
 	}
 
 	var msg dean.Msg
 	var pos = MsgPosition{
 		Path: "position",
-		Dist: d.Dist,
-		Max:  d.Max,
-		Min:  d.Min,
+		Dist: d.Sensor.Dist,
+		Max:  d.Sensor.Max,
+		Min:  d.Sensor.Min,
 	}
 
 	inj.Inject(msg.Marshal(pos))

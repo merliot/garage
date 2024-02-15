@@ -8,21 +8,6 @@ import (
 	"github.com/merliot/dean"
 )
 
-type targetSensorStruct struct {
-}
-
-type targetDoorStruct struct {
-	moving    bool
-	goingDown bool
-	clicked   bool
-}
-
-type targetStruct struct {
-}
-
-func (g *Garage) targetNew() {
-}
-
 func (d *Door) relayOn() {
 	if d.clicked {
 		// reverse direction if stopping
@@ -35,29 +20,29 @@ func (d *Door) relayOn() {
 func (d *Door) run(inj *dean.Injector) {
 	if d.clicked {
 		if d.goingDown {
-			d.Dist -= 5
-			if d.Dist < 0 {
-				d.Dist = 0
+			d.Sensor.Dist -= 5
+			if d.Sensor.Dist < 0 {
+				d.Sensor.Dist = 0
 			}
-			if d.Dist == 0 {
+			if d.Sensor.Dist == 0 {
 				d.goingDown = false
 				d.clicked = false
 			}
 		} else {
-			d.Dist += 5
-			if d.Dist > 100 {
-				d.Dist = 100
+			d.Sensor.Dist += 5
+			if d.Sensor.Dist > 100 {
+				d.Sensor.Dist = 100
 			}
-			if d.Dist == 100 {
+			if d.Sensor.Dist == 100 {
 				d.goingDown = true
 				d.clicked = false
 			}
 		}
-		d.sendPosition(inj, d.Dist)
+		d.sendPosition(inj, d.Sensor.Dist)
 	}
 }
 
-func (g *Garage) run(inj *dean.Injector) {
+func (g *Garage) Run(inj *dean.Injector) {
 	ticker := time.NewTicker(time.Second)
 	for {
 		select {
