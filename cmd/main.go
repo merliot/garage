@@ -11,9 +11,11 @@ import (
 )
 
 var (
-	id           = dean.GetEnv("ID", "garage01")
-	name         = dean.GetEnv("NAME", "Garage")
-	deployParams = dean.GetEnv("DEPLOY_PARAMS", "target=demo&door=Car Door&relay=DEMO2")
+	id   = dean.GetEnv("ID", "garage01")
+	name = dean.GetEnv("NAME", "Garage")
+	//deployParams = dean.GetEnv("DEPLOY_PARAMS", "target=demo&door=Car Door&relay=DEMO2")
+	deployParams = dean.GetEnv("DEPLOY_PARAMS", "")
+	wsScheme     = dean.GetEnv("WS_SCHEME", "ws://")
 	port         = dean.GetEnv("PORT", "8000")
 	portPrime    = dean.GetEnv("PORT_PRIME", "8001")
 	user         = dean.GetEnv("USER", "")
@@ -28,5 +30,6 @@ func main() {
 	garage.SetDeployParams(deployParams)
 	garage.SetWifiAuth(ssids, passphrases)
 	garage.SetDialURLs(dialURLs)
-	runner.Run(garage, port, portPrime, user, passwd, dialURLs)
+	garage.SetWsScheme(wsScheme)
+	runner.Run(garage, port, portPrime, user, passwd, dialURLs, wsScheme)
 }

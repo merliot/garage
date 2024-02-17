@@ -13,10 +13,8 @@ RUN go mod download
 
 COPY . ./
 
-ARG SCHEME=wss
-
 RUN go work use .
-RUN go build -tags $SCHEME,prime -o /garage ./cmd/
+RUN go build -tags prime -o /garage ./cmd/
 RUN go run ../device/cmd/uf2-builder -target nano-rp2040 -model garage
 RUN go run ../device/cmd/uf2-builder -target wioterminal -model garage
 
