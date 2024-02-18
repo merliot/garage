@@ -82,7 +82,7 @@ func (g *Garage) click(msg *dean.Msg) {
 }
 
 func (g *Garage) position(msg *dean.Msg) {
-	msg.Unmarshal(&g.Door).Broadcast()
+	msg.Unmarshal(&g.Door.Sensor).Broadcast()
 }
 
 func (g *Garage) Subscribers() dean.Subscribers {
