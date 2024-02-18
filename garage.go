@@ -107,10 +107,11 @@ func firstValue(values url.Values, key string) string {
 
 func (g *Garage) parseParams() {
 	values := g.ParseDeployParams()
-	g.Door.Name = firstValue(values, "door")
-	g.Door.Relay.Gpio = firstValue(values, "relay")
-	g.Door.Relay.Configure()
-	g.Door.Sensor.Vl53l1x.Configure()
+	door := &g.Door
+	door.Name = firstValue(values, "door")
+	door.Relay.Gpio = firstValue(values, "relay")
+	door.Relay.Configure()
+	door.Sensor.Vl53l1x.Configure()
 }
 
 func (g *Garage) Setup() {

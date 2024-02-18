@@ -44,19 +44,20 @@ class Garage extends WebSocketController {
 
 	setDoorImg() {
 		let image = document.getElementById("door-img")
-		let door = this.state.Door
+		let sensor = this.state.Door.Sensor
+		let relay = this.state.Door.Relay
 
-		let range = door.Max - door.Min
+		let range = sensor.Max - sensor.Min
 		let percent = 0
 		if (range !== 0) {
-			percent = Math.round((door.Dist - door.Min) / range * 100.0 / 5) * 5
+			percent = Math.round((sensor.Dist - sensor.Min) / range * 100.0 / 5) * 5
 			percent = Math.min(100, Math.max(0, percent))
 		}
 
 		image.src = "images/door-" + percent + ".png"
 
 		let div = document.getElementById("door")
-		div.style.background = (door.Clicked) ? "cornsilk" : "none"
+		div.style.background = (relay.State) ? "cornsilk" : "none"
 	}
 
 	setMouse() {
@@ -72,21 +73,21 @@ class Garage extends WebSocketController {
 	}
 
 	saveClick(msg) {
-		this.state.Door.Clicked = msg.Clicked
+		this.state.Door.Relay.State = msg.Clicked
 		this.setDoorImg()
 	}
 
 	savePosition(msg) {
-		let door = this.state.Door
-		door.Dist = msg.Dist
-		door.Min = msg.Min
-		door.Max = msg.Max
+		let sensor = this.state.Door.Sensor
+		sensor.Dist = msg.Dist
+		sensor.Min = msg.Min
+		sensor.Max = msg.Max
 		this.setDoorImg()
 	}
 
 	click(clicked) {
-		let door = this.state.Door
-		door.Clicked = clicked
+		let relay = this.state.Door.Relay
+		relay.State = clicked
 		this.setDoorImg()
 		this.webSocket.send(JSON.stringify({Path: "click", Clicked: clicked}))
 	}
