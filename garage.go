@@ -121,26 +121,28 @@ func (g *Garage) Setup() {
 
 func (d *Door) sendPosition(inj *dean.Injector, dist int32) {
 
-	if dist == d.Sensor.lastDist {
+	sensor := &d.Sensor
+
+	if dist == sensor.lastDist {
 		return
 	}
 
-	d.Sensor.Dist = dist
-	d.Sensor.lastDist = dist
+	sensor.Dist = dist
+	sensor.lastDist = dist
 
-	if dist > d.Sensor.Max {
-		d.Sensor.Max = dist
+	if dist > sensor.Max {
+		sensor.Max = dist
 	}
-	if dist < d.Sensor.Min {
-		d.Sensor.Min = dist
+	if dist < sensor.Min {
+		sensor.Min = dist
 	}
 
 	var msg dean.Msg
 	var pos = MsgPosition{
 		Path: "position",
-		Dist: d.Sensor.Dist,
-		Max:  d.Sensor.Max,
-		Min:  d.Sensor.Min,
+		Dist: sensor.Dist,
+		Max:  sensor.Max,
+		Min:  sensor.Min,
 	}
 
 	inj.Inject(msg.Marshal(pos))

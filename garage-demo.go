@@ -18,27 +18,28 @@ func (d *Door) relayOn() {
 
 // Simulate a garage door
 func (d *Door) run(inj *dean.Injector) {
+	sensor := &d.Sensor
 	if d.clicked {
 		if d.goingDown {
-			d.Sensor.Dist -= 5
-			if d.Sensor.Dist < 0 {
-				d.Sensor.Dist = 0
+			sensor.Dist -= 5
+			if sensor.Dist < 0 {
+				sensor.Dist = 0
 			}
-			if d.Sensor.Dist == 0 {
+			if sensor.Dist == 0 {
 				d.goingDown = false
 				d.clicked = false
 			}
 		} else {
-			d.Sensor.Dist += 5
-			if d.Sensor.Dist > 100 {
-				d.Sensor.Dist = 100
+			sensor.Dist += 5
+			if sensor.Dist > 100 {
+				sensor.Dist = 100
 			}
-			if d.Sensor.Dist == 100 {
+			if sensor.Dist == 100 {
 				d.goingDown = true
 				d.clicked = false
 			}
 		}
-		d.sendPosition(inj, d.Sensor.Dist)
+		d.sendPosition(inj, sensor.Dist)
 	}
 }
 
