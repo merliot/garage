@@ -12,7 +12,7 @@ import (
 	"github.com/merliot/device/vl53l1x"
 )
 
-//go:embed css html js images template
+//go:embed css go.mod html js images template
 var fs embed.FS
 
 type Sensor struct {
