@@ -109,9 +109,11 @@ func (g *Garage) parseParams() {
 	values := g.ParseDeployParams()
 	door := &g.Door
 	door.Name = firstValue(values, "door")
-	door.Relay.Gpio = firstValue(values, "relay")
-	door.Relay.Configure()
-	door.Sensor.Vl53l1x.Configure()
+	relay := &g.Door.Relay
+	relay.Gpio = firstValue(values, "relay")
+	relay.Configure()
+	sensor := &g.Door.Sensor.Vl53l1x
+	sensor.Configure()
 }
 
 func (g *Garage) Setup() {
