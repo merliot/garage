@@ -4,7 +4,6 @@ import (
 	"embed"
 	"math"
 	"net/http"
-	"net/url"
 
 	"github.com/merliot/dean"
 	"github.com/merliot/device"
@@ -98,21 +97,14 @@ func (g *Garage) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 	g.API(w, req, g)
 }
 
-func firstValue(values url.Values, key string) string {
-	if v, ok := values[key]; ok {
-		return v[0]
-	}
-	return ""
-}
-
 func (g *Garage) parseParams() {
 	values := g.ParseDeployParams()
 	door := &g.Door
-	door.Name = firstValue(values, "door")
+	door.Name = g.ParamFirstValue(values, "door")
 	relay := &g.Door.Relay
-	relay.Gpio = firstValue(values, "relay")
+	relay.Gpio = g.ParamFirstValue(values, "relay")
 	relay.Configure()
-	sensor := &g.Door.Sensor.Vl53l1x
+	sensor := g.Door.Sensor.Vl53l1x
 	sensor.Configure()
 }
 
