@@ -98,11 +98,10 @@ func (g *Garage) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 }
 
 func (g *Garage) parseParams() {
-	values := g.ParseDeployParams()
 	door := &g.Door
-	door.Name = g.ParamFirstValue(values, "door")
+	door.Name = g.ParamFirstValue("door")
 	relay := &g.Door.Relay
-	relay.Gpio = g.ParamFirstValue(values, "relay")
+	relay.Gpio = g.ParamFirstValue("relay")
 	relay.Configure()
 	sensor := g.Door.Sensor.Vl53l1x
 	sensor.Configure()
