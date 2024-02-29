@@ -6,7 +6,7 @@ WORKDIR /app
 COPY . .
 
 RUN go build -tags prime -o /garage ./cmd
-RUN /garage -uf2
+RUN go run ./cmd/gen-uf2
 
 EXPOSE 8000
 
