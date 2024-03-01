@@ -31,5 +31,5 @@ func main() {
 	garage.SetWifiAuth(ssids, passphrases)
 	garage.SetDialURLs(dialURLs)
 	garage.SetWsScheme(wsScheme)
-	runner.Run(garage.Device, port, portPrime, user, passwd, dialURLs, wsScheme)
+	runner.Run(garage, port, portPrime, user, passwd, dialURLs, wsScheme)
 }
