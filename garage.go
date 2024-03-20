@@ -103,7 +103,7 @@ func (g *Garage) parseParams() {
 	relay := &g.Door.Relay
 	relay.Gpio = g.ParamFirstValue("relay")
 	relay.Configure()
-	sensor := g.Door.Sensor.Vl53l1x
+	sensor := &g.Door.Sensor.Vl53l1x
 	sensor.Configure()
 }
 
