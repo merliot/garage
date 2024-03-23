@@ -49,7 +49,7 @@ type MsgPosition struct {
 	Max  int32
 }
 
-var targets = []string{"demo", "nano-rp2040", "wioterminal"}
+var targets = []string{"demo", "nano-rp2040"}
 
 func New(id, model, name string) dean.Thinger {
 	println("NEW GARAGE")
