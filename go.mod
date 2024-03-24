@@ -3,8 +3,8 @@ module github.com/merliot/garage
 go 1.22.0
 
 require (
-	github.com/merliot/dean v0.0.0-20240324065954-974d3d90da14
-	github.com/merliot/device v0.0.0-20240324070113-aeb97611126e
+	github.com/merliot/dean v0.0.0-20240324082120-fab0f3abaa21
+	github.com/merliot/device v0.0.0-20240324082427-744a142bac99
 )
 
 require (
