@@ -1,7 +1,6 @@
 package garage
 
 import (
-	"embed"
 	"math"
 	"net/http"
 
@@ -10,9 +9,6 @@ import (
 	"github.com/merliot/device/relay"
 	"github.com/merliot/device/vl53l1x"
 )
-
-//go:embed css go.mod html js images template
-var fs embed.FS
 
 type Sensor struct {
 	vl53l1x.Vl53l1x `json:"-"`

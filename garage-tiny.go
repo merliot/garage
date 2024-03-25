@@ -3,10 +3,13 @@
 package garage
 
 import (
+	"embed"
 	"time"
 
 	"github.com/merliot/dean"
 )
+
+var fs embed.FS
 
 func (d *Door) relayOn() {
 	d.Relay.On()
