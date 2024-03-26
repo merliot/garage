@@ -4,7 +4,6 @@ package garage
 
 import (
 	"embed"
-	"machine"
 	"time"
 
 	"github.com/merliot/dean"
@@ -27,8 +26,5 @@ func (g *Garage) Run(inj *dean.Injector) {
 			g.Door.sendPosition(inj, dist)
 		}
 		time.Sleep(time.Second)
-		if i == 99 {
-			machine.CPUReset()
-		}
 	}
 }
