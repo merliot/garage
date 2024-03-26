@@ -4,6 +4,7 @@ package garage
 
 import (
 	"embed"
+	"machine"
 	"time"
 
 	"github.com/merliot/dean"
@@ -21,10 +22,13 @@ func (g *Garage) Run(inj *dean.Injector) {
 
 	// Service sensor
 	sensor := g.Door.Sensor.Vl53l1x
-	for {
+	for i := 0; i < 100; i++ {
 		if dist, ok := sensor.Distance(); ok {
 			g.Door.sendPosition(inj, dist)
 		}
 		time.Sleep(time.Second)
+		if i == 99 {
+			machine.CPUReset()
+		}
 	}
 }
