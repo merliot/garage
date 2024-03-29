@@ -21,7 +21,7 @@ func (g *Garage) Run(inj *dean.Injector) {
 
 	// Service sensor
 	sensor := g.Door.Sensor.Vl53l1x
-	for i := 0; i < 100; i++ {
+	for {
 		if dist, ok := sensor.Distance(); ok {
 			g.Door.sendPosition(inj, dist)
 		}
