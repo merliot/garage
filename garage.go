@@ -111,7 +111,6 @@ func (g *Garage) Setup() {
 func (g *Garage) sendPosition(inj *dean.Injector, dist int32) {
 
 	g.Lock()
-	defer g.Unlock()
 
 	sensor := &g.Door.Sensor
 
@@ -136,6 +135,8 @@ func (g *Garage) sendPosition(inj *dean.Injector, dist int32) {
 		Max:  sensor.Max,
 		Min:  sensor.Min,
 	}
+
+	g.Unlock()
 
 	inj.Inject(msg.Marshal(pos))
 }
