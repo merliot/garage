@@ -112,11 +112,7 @@ func (d *Door) sendPosition(inj *dean.Injector, dist int32) {
 
 	sensor := &d.Sensor
 
-	diff := dist - sensor.lastDist
-	if diff < 0 {
-		diff = -diff
-	}
-	if diff < 40 {
+	if dist == sensor.lastDist {
 		return
 	}
 
