@@ -17,17 +17,18 @@ func (d *Door) relayOn() {
 }
 
 // Simulate a garage door
-func (d *Door) run(inj *dean.Injector) {
-	sensor := &d.Sensor
-	if d.clicked {
-		if d.goingDown {
+func (g *Garage) run(inj *dean.Injector) {
+	door := &g.Door
+	sensor := &g.Door.Sensor
+	if door.clicked {
+		if door.goingDown {
 			sensor.Dist -= 5
 			if sensor.Dist < 0 {
 				sensor.Dist = 0
 			}
 			if sensor.Dist == 0 {
-				d.goingDown = false
-				d.clicked = false
+				door.goingDown = false
+				door.clicked = false
 			}
 		} else {
 			sensor.Dist += 5
@@ -35,11 +36,11 @@ func (d *Door) run(inj *dean.Injector) {
 				sensor.Dist = 100
 			}
 			if sensor.Dist == 100 {
-				d.goingDown = true
-				d.clicked = false
+				door.goingDown = true
+				door.clicked = false
 			}
 		}
-		d.sendPosition(inj, sensor.Dist)
+		g.sendPosition(inj, sensor.Dist)
 	}
 }
 
@@ -48,7 +49,7 @@ func (g *Garage) Run(inj *dean.Injector) {
 	for {
 		select {
 		case <-ticker.C:
-			g.Door.run(inj)
+			g.run(inj)
 		}
 	}
 }

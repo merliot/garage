@@ -23,7 +23,7 @@ func (g *Garage) Run(inj *dean.Injector) {
 	sensor := g.Door.Sensor.Vl53l1x
 	for {
 		if dist, ok := sensor.Distance(); ok {
-			g.Door.sendPosition(inj, dist)
+			g.sendPosition(inj, dist)
 		}
 		time.Sleep(time.Second)
 	}

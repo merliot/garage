@@ -108,12 +108,12 @@ func (g *Garage) Setup() {
 	g.parseParams()
 }
 
-func (d *Door) sendPosition(inj *dean.Injector, dist int32) {
+func (g *Garage) sendPosition(inj *dean.Injector, dist int32) {
 
 	g.Lock()
 	defer g.Unlock()
 
-	sensor := &d.Sensor
+	sensor := &g.Door.Sensor
 
 	if dist == sensor.lastDist {
 		return
