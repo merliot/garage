@@ -110,6 +110,9 @@ func (g *Garage) Setup() {
 
 func (d *Door) sendPosition(inj *dean.Injector, dist int32) {
 
+	g.Lock()
+	defer g.Unlock()
+
 	sensor := &d.Sensor
 
 	if dist == sensor.lastDist {
