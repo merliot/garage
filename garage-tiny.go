@@ -20,7 +20,7 @@ func (d *Door) relayOn() {
 func (g *Garage) Run(inj *dean.Injector) {
 
 	// Service sensor
-	sensor := g.Door.Sensor.Vl53l1x
+	sensor := &g.Door.Sensor.Vl53l1x
 	for {
 		if dist, ok := sensor.Distance(); ok {
 			g.sendPosition(inj, dist)
