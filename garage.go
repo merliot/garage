@@ -94,13 +94,10 @@ func (g *Garage) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 }
 
 func (g *Garage) parseParams() {
-	door := &g.Door
-	door.Name = g.ParamFirstValue("door")
-	relay := &g.Door.Relay
-	relay.Gpio = g.ParamFirstValue("relay")
-	relay.Configure()
-	sensor := &g.Door.Sensor.Vl53l1x
-	sensor.Configure()
+	g.Door.Name = g.ParamFirstValue("door")
+	g.Door.Relay.Gpio = g.ParamFirstValue("relay")
+	g.Door.Relay.Configure()
+	g.Door.Sensor.Vl53l1x.Configure()
 }
 
 func (g *Garage) Setup() {
@@ -115,6 +112,7 @@ func (g *Garage) sendPosition(inj *dean.Injector, dist int32) {
 	sensor := &g.Door.Sensor
 
 	if dist == sensor.lastDist {
+		g.Unlock()
 		return
 	}
 
