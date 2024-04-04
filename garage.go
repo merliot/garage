@@ -1,6 +1,7 @@
 package garage
 
 import (
+	"fmt"
 	"math"
 	"net/http"
 
@@ -48,7 +49,7 @@ type MsgPosition struct {
 var targets = []string{"demo", "nano-rp2040"}
 
 func New(id, model, name string) dean.Thinger {
-	println("NEW GARAGE")
+	fmt.Println("NEW GARAGE")
 	return &Garage{
 		Device: device.New(id, model, name, fs, targets).(*device.Device),
 		Door:   Door{Sensor: Sensor{Min: math.MaxInt32}},
