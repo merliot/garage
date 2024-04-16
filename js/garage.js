@@ -63,11 +63,13 @@ class Garage extends WebSocketController {
 	setMouse() {
 		let div = document.getElementById("door")
 		if (this.viewMode === ViewMode.ViewFull) {
-			div.onmousedown = () => {
-				this.click(true)
-			}
-			div.onmouseup = () => {
-				this.click(false)
+			if (this.state.Online) {
+				div.onmousedown = () => {
+					this.click(true)
+				}
+				div.onmouseup = () => {
+					this.click(false)
+				}
 			}
 		}
 	}

@@ -62,6 +62,7 @@ func (g *Garage) save(msg *dean.Msg) {
 
 func (g *Garage) getState(msg *dean.Msg) {
 	g.Path = "state"
+	g.parseParams()
 	msg.Marshal(g).Reply()
 }
 
@@ -97,6 +98,9 @@ func (g *Garage) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 func (g *Garage) parseParams() {
 	g.Door.Name = g.ParamFirstValue("door")
 	g.Door.Relay.Gpio = g.ParamFirstValue("relay")
+}
+
+func (g *Garage) configure() {
 	g.Door.Relay.Configure()
 	g.Door.Sensor.Vl53l1x.Configure()
 }
@@ -104,6 +108,7 @@ func (g *Garage) parseParams() {
 func (g *Garage) Setup() {
 	g.Device.Setup()
 	g.parseParams()
+	g.configure()
 }
 
 func (g *Garage) sendPosition(inj *dean.Injector, dist int32) {
