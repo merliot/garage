@@ -56,30 +56,30 @@ func New(id, model, name string) dean.Thinger {
 	}
 }
 
-func (g *Garage) save(msg *dean.Msg) {
-	msg.Unmarshal(g).Broadcast()
+func (g *Garage) save(pkt *dean.Packet) {
+	pkt.Unmarshal(g).Broadcast()
 }
 
-func (g *Garage) getState(msg *dean.Msg) {
+func (g *Garage) getState(pkt *dean.Packet) {
 	g.Path = "state"
 	g.parseParams()
-	msg.Marshal(g).Reply()
+	pkt.Marshal(g).Reply()
 }
 
-func (g *Garage) click(msg *dean.Msg) {
+func (g *Garage) click(pkt *dean.Packet) {
 	var msgClick MsgClick
-	msg.Unmarshal(&msgClick)
+	pkt.Unmarshal(&msgClick)
 	g.Door.Relay.State = msgClick.Clicked
 	if g.IsMetal() {
 		if msgClick.Clicked {
 			g.Door.relayOn()
 		}
 	}
-	msg.Broadcast()
+	pkt.Broadcast()
 }
 
-func (g *Garage) position(msg *dean.Msg) {
-	msg.Unmarshal(&g.Door.Sensor).Broadcast()
+func (g *Garage) position(pkt *dean.Packet) {
+	pkt.Unmarshal(&g.Door.Sensor).Broadcast()
 }
 
 func (g *Garage) Subscribers() dean.Subscribers {
@@ -132,7 +132,7 @@ func (g *Garage) sendPosition(inj *dean.Injector, dist int32) {
 		sensor.Min = dist
 	}
 
-	var msg dean.Msg
+	var pkt dean.Packet
 	var pos = MsgPosition{
 		Path: "position",
 		Dist: sensor.Dist,
@@ -142,5 +142,5 @@ func (g *Garage) sendPosition(inj *dean.Injector, dist int32) {
 
 	g.Unlock()
 
-	inj.Inject(msg.Marshal(pos))
+	inj.Inject(pkt.Marshal(pos))
 }
