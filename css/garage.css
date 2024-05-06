@@ -1,29 +1,29 @@
-.doors {
+.model-garage .doors {
 	justify-content: center;
 	align-items: center;
 	min-height: 210px;
 }
 
-.door {
+.model-garage .door {
 	align-items: center;
 	padding: 10px;
 }
 
-.door-img {
+.model-garage .door-img {
 	height: 120px;
 	width: 120px;
 	margin-bottom: 10px;
 }
 
-.tile .doors {
+.model-garage .tile .doors {
 	min-height: 120px;
 }
 
-.tile .door-img {
+.model-garage .tile .door-img {
 	height: 60px;
 	width: 60px;
 }
 
-.tile #door-name {
+.model-garage .tile #door-name {
 	font-size: x-small;
 }
